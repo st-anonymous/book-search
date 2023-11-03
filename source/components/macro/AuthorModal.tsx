@@ -22,7 +22,6 @@ export const AuthorModal = () => {
   return (
     <Modal
       visible={isVisible}
-      transparent={true}
       style={{
         position: 'absolute',
         flex: 1,

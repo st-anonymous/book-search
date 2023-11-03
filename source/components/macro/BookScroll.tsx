@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useRef } from "react"
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native"
-import { useRecoilValue } from "recoil"
-import { BooksDetailsAtom } from "../../data/dataClusters"
+import React, { useCallback, useRef, useState } from "react"
+import { FlatList, Image, TouchableOpacity, View } from "react-native"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
+import { BooksDetailsAtom, SearchDetailsAtom } from "../../data/dataClusters"
 import BookCard from "../micro/BookCard"
+import axios from "axios"
 
 export type BooksDetailsType = {
   coverId: string,
@@ -13,11 +14,43 @@ export type BooksDetailsType = {
 
 export const BookScroll = () => {
   const booksDetails = useRecoilValue(BooksDetailsAtom);
+  const setBooksDetailsAtom = useSetRecoilState(BooksDetailsAtom);
+  const [searchDetails, setSearchDetails] = useRecoilState(SearchDetailsAtom);
 
   const flatListRef = useRef(null);
 
   const CallAPIAgain = () => {
-    console.log('reaching end')
+    console.log('reaching end', searchDetails.page);
+    console.log(`https://openlibrary.org/search.json?q=${searchDetails.search}&page=${searchDetails.page+1}`);
+    axios.get(`https://openlibrary.org/search.json?q=${searchDetails.search}&page=${searchDetails.page+1}`)
+      .then(res => {
+        const booksDocs = res.data.docs;
+        // console.log(booksDocs, booksDocs.length);
+        let booksDetails: BooksDetailsType[] = [];
+        booksDocs.map((item: any) => {
+          booksDetails.push({
+            coverId: item.cover_i,
+            title: item.title,
+            authorName: item.author_name,
+            authorId: item.author_key
+          })
+        })
+        setBooksDetailsAtom(prev => {
+          return [
+            ...prev,
+            ...booksDetails
+          ]
+        });
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    setSearchDetails(prev => {
+      return {
+        ...prev,
+        page: searchDetails.page + 1
+      }
+    })
   }
   
   const ScrollToTop = () => {

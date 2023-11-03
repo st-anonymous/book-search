@@ -1,5 +1,10 @@
 import { atom } from "recoil";
 
+export type SearchDetailsType = {
+  search: string,
+  page: number,
+}
+
 export type BooksDetailsType = {
   coverId: string,
   title: string,
@@ -14,6 +19,11 @@ export type AuthorsDetailsType = {
   workCount: number,
   topWork: string,
 }
+
+export const SearchDetailsAtom = atom<SearchDetailsType>({
+  key: 'SearchDetailsAtom',
+  default: {}
+})
 
 export const BooksDetailsAtom = atom<BooksDetailsType[]>({
   key: 'BooksDetailsAtom',
