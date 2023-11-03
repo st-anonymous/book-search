@@ -21,9 +21,8 @@ const BookCard = (props: BookCardProps) => {
     axios.get(`https://openlibrary.org/authors/${author_id}.json`)
       .then(res => {
         const authorDocs = res.data;
-        console.log(authorDocs);
         setAuthorsDetailsAtom({
-          authorId: authorDocs.key,
+          authorId: authorDocs.key.substring(9),
           authorName: authorDocs.name,
           DOB: authorDocs.birth_date,
           workCount: authorDocs.work_count,
@@ -31,7 +30,6 @@ const BookCard = (props: BookCardProps) => {
         });
       })
       .catch(err => {
-        console.log(err, 'yaha aarha')
       })
   }
   
@@ -41,9 +39,7 @@ const BookCard = (props: BookCardProps) => {
     >
       <Image source={{ uri: `https://covers.openlibrary.org/b/id/${coverId}-L.jpg` }} alt={`Image of ${title}`} style={{ height: 150, width: 100, resizeMode: 'center' }} />
       {title &&
-        <TouchableOpacity>
           <Text style={{ fontSize: 16, textAlign: 'center' }} >{title.length > 40 ? title.substring(0, 35) + '...' : title}</Text>
-        </TouchableOpacity>
       }
       {authorName &&
         authorName.map((author, index) => {

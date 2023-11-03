@@ -20,12 +20,9 @@ export const BookScroll = () => {
   const flatListRef = useRef(null);
 
   const CallAPIAgain = () => {
-    console.log('reaching end', searchDetails.page);
-    console.log(`https://openlibrary.org/search.json?q=${searchDetails.search}&page=${searchDetails.page+1}`);
     axios.get(`https://openlibrary.org/search.json?q=${searchDetails.search}&page=${searchDetails.page+1}`)
       .then(res => {
         const booksDocs = res.data.docs;
-        // console.log(booksDocs, booksDocs.length);
         let booksDetails: BooksDetailsType[] = [];
         booksDocs.map((item: any) => {
           booksDetails.push({
@@ -43,7 +40,6 @@ export const BookScroll = () => {
         });
       })
       .catch(err => {
-        console.log(err)
       })
     setSearchDetails(prev => {
       return {

@@ -34,12 +34,9 @@ export const SearchBar = () => {
       }
     })
     setIsAPICalling(true);
-    console.log(`https://openlibrary.org/search.json?q=${search}&page=1`);
     axios.get(`https://openlibrary.org/search.json?q=${search}&page=1`)
       .then(res => {
-        setIsAPICalling(false);
         const booksDocs = res.data.docs;
-        // console.log(booksDocs, booksDocs.length);
         let booksDetails: BooksDetailsType[] = [];
         booksDocs.map((item: any) => {
           booksDetails.push({
@@ -53,7 +50,6 @@ export const SearchBar = () => {
       })
       .catch(err => {
         setIsAPICalling(false);
-        console.log(err)
       })
   }
 
