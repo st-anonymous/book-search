@@ -2,7 +2,7 @@
 import axios from "axios";
 import React, { useState } from "react"
 import { View, TextInput, TouchableOpacity, Text, Keyboard } from "react-native"
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { BooksDetailsAtom, SearchDetailsAtom } from "../../data/dataClusters";
 
 export type BooksDetailsType = {
@@ -14,9 +14,9 @@ export type BooksDetailsType = {
 
 export const SearchBar = () => {
   const [searchText, setSearchText] = useState('');
+  const [searchDetailsAtom, setSearchDetailsAtom] = useRecoilState(SearchDetailsAtom);
   const [isAPICalling, setIsAPICalling] = useState(true);
   const setBooksDetailsAtom = useSetRecoilState(BooksDetailsAtom)
-  const setSearchDetailsAtom = useSetRecoilState(SearchDetailsAtom)
 
   const onSearchChange = (val: string) => {
     val ? setIsAPICalling(false) : setIsAPICalling(true);
@@ -30,12 +30,20 @@ export const SearchBar = () => {
       return {
         ...prev,
         search: search,
-        page: 1
+        page: 1,
+        isSearching: true
       }
     })
     setIsAPICalling(true);
     axios.get(`https://openlibrary.org/search.json?q=${search}&page=1`)
       .then(res => {
+        setIsAPICalling(false);
+        setSearchDetailsAtom(prev => {
+          return {
+            ...prev,
+            isSearching: false
+          }
+        })
         const booksDocs = res.data.docs;
         let booksDetails: BooksDetailsType[] = [];
         booksDocs.map((item: any) => {
@@ -49,6 +57,12 @@ export const SearchBar = () => {
         setBooksDetailsAtom(booksDetails);
       })
       .catch(err => {
+        setSearchDetailsAtom(prev => {
+          return {
+            ...prev,
+            isSearching: false
+          }
+        })
         setIsAPICalling(false);
       })
   }

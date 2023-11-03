@@ -3,6 +3,7 @@ import { atom } from "recoil";
 export type SearchDetailsType = {
   search: string,
   page: number,
+  isSearching: boolean
 }
 
 export type BooksDetailsType = {
