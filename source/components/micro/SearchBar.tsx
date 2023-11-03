@@ -64,15 +64,18 @@ export const SearchBar = () => {
       value={searchText} 
       onChangeText={onSearchChange} 
         style={{
-        color: color,
-        borderWidth: 1, 
-        borderColor: color, 
-        width: '75%', 
-        fontSize: 16, 
-        lineHeight: 20, 
-        padding: 12
-      }}/>
-      <TouchableOpacity onPress={isAPICalling ? () => {} : onSearchClick} style={{alignItems: 'center', justifyContent: 'center', backgroundColor: color}}>
+          color: color,
+          borderWidth: 1, 
+          borderColor: color, 
+          width: '75%', 
+          fontSize: 16, 
+          lineHeight: 20, 
+          padding: 12,
+          borderTopLeftRadius: 15,
+          borderBottomLeftRadius: 15,
+        }}
+      />
+      <TouchableOpacity onPress={isAPICalling ? () => {} : onSearchClick} style={{alignItems: 'center', justifyContent: 'center', backgroundColor: color, borderTopRightRadius: 15, borderBottomRightRadius: 15}}>
         <Text style={{lineHeight: 20, padding: 12, color: 'white'}}>Search</Text>
       </TouchableOpacity>
     </View>

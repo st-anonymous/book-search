@@ -21,7 +21,7 @@ export const BookScroll = () => {
   }
   
   const ScrollToTop = () => {
-    if(booksDetails.length) flatListRef.current.scrollToIndex({index: 0})
+    if(booksDetails.length) flatListRef?.current?.scrollToIndex({index: 0})
   }
 
   const RenderBooks = useCallback(({item}) => (

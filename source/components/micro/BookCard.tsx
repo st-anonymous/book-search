@@ -1,6 +1,9 @@
 /* eslint-disable */
-import React, { useEffect } from "react"
+import React from "react"
 import { Image, Text, TouchableOpacity, View } from "react-native"
+import { useSetRecoilState } from "recoil"
+import { AuthorsDetailsAtom } from "../../data/dataClusters"
+import axios from "axios"
 
 export type BookCardProps = {
   coverId: string,
@@ -11,9 +14,25 @@ export type BookCardProps = {
 
 const BookCard = (props: BookCardProps) => {
   const { coverId, title, authorName, authorId } = props;
+  const setAuthorsDetailsAtom = useSetRecoilState(AuthorsDetailsAtom)
 
   const onSelectAuthor = (index: number) => {
-    console.log(authorId[index]);
+    const author_id = authorId[index];
+    axios.get(`https://openlibrary.org/authors/${author_id}.json`)
+      .then(res => {
+        const authorDocs = res.data;
+        console.log(authorDocs);
+        setAuthorsDetailsAtom({
+          authorId: authorDocs.key,
+          authorName: authorDocs.name,
+          DOB: authorDocs.birth_date,
+          workCount: authorDocs.work_count,
+          topWork: authorDocs.top_work,
+        });
+      })
+      .catch(err => {
+        console.log(err, 'yaha aarha')
+      })
   }
   
   return (
@@ -29,8 +48,8 @@ const BookCard = (props: BookCardProps) => {
       {authorName &&
         authorName.map((author, index) => {
           return (
-            < TouchableOpacity onPress={() => onSelectAuthor(index)}>
-              <Text style={{ fontSize: 12, textAlign: 'center' }} >{author}</Text>
+            < TouchableOpacity key={author + index} onPress={() => onSelectAuthor(index)}>
+              <Text style={{ fontSize: 12, textAlign: 'center' }} >{author+' ⓘ'}</Text>
             </ TouchableOpacity>
           )
         })
